@@ -1,0 +1,17 @@
+name: gate
+on:
+  pull_request:
+  merge_group:
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pass on pull requests, fail in the merge queue
+        run: |
+          if [ "$EVENT" = "merge_group" ]; then
+            echo "This fixture fails every merge group on purpose."
+            exit 1
+          fi
+          echo "Pull request check passes."
+        env:
+          EVENT: ${{ github.event_name }}
