@@ -6,12 +6,13 @@ jobs:
   gate:
     runs-on: ubuntu-latest
     steps:
-      - name: Pass on pull requests, fail in the merge queue
+      - name: Pass on pull requests; in the merge queue fail only PR 1
         run: |
-          if [ "$EVENT" = "merge_group" ]; then
-            echo "This fixture fails every merge group on purpose."
+          if [ "$EVENT" = "merge_group" ] && [[ "$HEAD_REF" == */pr-1-* ]]; then
+            echo "This fixture fails PR 1's merge groups on purpose."
             exit 1
           fi
-          echo "Pull request check passes."
+          echo "Check passes."
         env:
           EVENT: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.merge_group.head_ref }}
